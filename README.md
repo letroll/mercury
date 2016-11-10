@@ -12,10 +12,19 @@ Take a look at the [wiki](https://github.com/Skarafaz/mercury/wiki) to learn how
 
 This app is intended to be used as a simple remote so interactive commands and output handling are not supported.
 
-## Work in progress
+## Todo
 
 * \[ ] show root commands output in log
+* \[ ] use immutable code
+* \[ ] replace use of config file by bdd
+* \[ ] save and encrypt sudo password
 
-##  Todo
+## Work in progress
+
+* \[ ] long press on command to edit snippet
+* \[ ] replace async task with rxjava observable
+* \[ ] use dagger to inject factory
+
+##  Done
 
 * \[X] ~~show normal user commands output in log~~

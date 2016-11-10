@@ -5,7 +5,7 @@
 
     <fragment
         android:id="@+id/list"
-        android:name="it.skarafaz.mercury.fragment.LogFragment"
+        android:name="it.skarafaz.mercury.log.LogFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </FrameLayout>
