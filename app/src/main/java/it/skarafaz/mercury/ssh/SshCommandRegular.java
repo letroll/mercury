@@ -89,8 +89,12 @@ public class SshCommandRegular extends SshCommand {
     protected String formatCmd(String cmd) {
         if (sudo) {
             return String.format("echo %s | %s -S -p '' %s %s > /dev/null 2>&1", password, sudoPath, nohupPath, cmd);
+            //return String.format("export HISTIGNORE='*sudo -S*' && echo %s | sudo -S %s", password, cmd);
+            //return String.format("echo %s | %s -S -p '' %s %s", password, sudoPath, nohupPath, cmd);
         } else {
-            return String.format("%s %s > /dev/null 2>&1", nohupPath, cmd);
+            //return String.format("%s %s > /dev/null 2>&1", nohupPath, cmd);
+            //return cmd;
+            return String.format("%s %s", nohupPath, cmd);
         }
     }
 
