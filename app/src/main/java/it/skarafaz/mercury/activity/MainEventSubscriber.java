@@ -1,5 +1,6 @@
 package it.skarafaz.mercury.activity;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.text.InputType;
 import android.widget.Toast;
@@ -67,6 +68,10 @@ public class MainEventSubscriber {
         activity.dismissProgressDialog();
 
         EventBus.getDefault().removeStickyEvent(event);
+        Intent logIntent = new Intent(activity, LogActivity.class);
+        logIntent.putExtra("result", event.getResult());
+        activity.startActivity(logIntent);
+
     }
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)

@@ -1,6 +1,7 @@
 package it.skarafaz.mercury.adapter;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 
 import java.util.List;
@@ -52,6 +54,36 @@ public class CommandListAdapter extends ArrayAdapter<Command> {
             @Override
             public void onClick(View v) {
                 new SshCommandRegular(command).start();
+            }
+        });
+        holder.row.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                new MaterialDialog.Builder(getContext())
+                        .title(command.getName())
+                        .input("enter here your new command", command.getCmd(), false, new MaterialDialog.InputCallback() {
+                            @Override
+                            public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
+
+                            }
+                        })
+                        .content(command.getCmd())
+                        .positiveText("save edited command")
+                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+
+                            }
+                        })
+                        .negativeText("cancel")
+                        .onNegative(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+
+                            }
+                        })
+                        .show();
+                return true;
             }
         });
         return view;

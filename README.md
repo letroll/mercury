@@ -11,3 +11,11 @@ Take a look at the [wiki](https://github.com/Skarafaz/mercury/wiki) to learn how
 ## Limitations
 
 This app is intended to be used as a simple remote so interactive commands and output handling are not supported.
+
+## Work in progress
+
+* \[ ] show root commands output in log
+
+##  Todo
+
+* \[X] ~~show normal user commands output in log~~

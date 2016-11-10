@@ -1,5 +1,7 @@
 package it.skarafaz.mercury.ssh;
 
+import android.util.Log;
+
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
@@ -10,8 +12,11 @@ import org.greenrobot.eventbus.EventBus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Properties;
 
 import it.skarafaz.mercury.event.SshCommandEnd;
@@ -31,6 +36,7 @@ public abstract class SshCommand extends Thread {
     protected Boolean sudo;
     protected String cmd;
     protected Boolean confirm;
+    protected String result;
 
     public SshCommand() {
         this.jsch = new JSch();
@@ -69,7 +75,7 @@ public abstract class SshCommand extends Thread {
     }
 
     protected void afterExecute(SshCommandStatus status) {
-        EventBus.getDefault().postSticky(new SshCommandEnd(status));
+        EventBus.getDefault().postSticky(new SshCommandEnd(status, result));
     }
 
     protected boolean initConnection() {
@@ -104,6 +110,10 @@ public abstract class SshCommand extends Thread {
             channel.setCommand(cmd);
             channel.setInputStream(null);
 
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            channel.setOutputStream(baos, true);
+            //channel.setOutputStream(baos);
+
             InputStream stdout = channel.getInputStream();
             InputStream stderr = channel.getErrStream();
 
@@ -121,6 +131,27 @@ public abstract class SshCommand extends Thread {
     }
 
     protected boolean waitForChannelClosed(ChannelExec channel, InputStream stdout, InputStream stderr) {
+        BufferedReader r = new BufferedReader(new InputStreamReader(stdout));
+        try {
+            StringBuilder total = new StringBuilder(stdout.available());
+            String line;
+            while ((line = r.readLine()) != null) {
+                total.append(line).append('\n');
+            }
+            result = total.toString();
+            Log.e("toto", "" + result);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+/*        try {
+            byte[] data = new byte[stdout.available()];
+            stdout.read(data);
+            result = new String(data);
+            Log.e("toto",result);
+        }catch (IOException e){
+            e.printStackTrace();
+        }*/
         return true;
     }
 
