@@ -25,4 +25,8 @@ public class MainPresenter {
     public void onStop() {
 
     }
+
+    public boolean isConnectionStringValid(String input) {
+        return input.matches("^.+@.+$");
+    }
 }

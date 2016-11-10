@@ -17,7 +17,6 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -162,7 +161,7 @@ public class MainActivity extends MercuryActivity implements MainView {
                         adapter.updateServers(ConfigManager.getInstance().getServers());
                         pager.setVisibility(View.VISIBLE);
                         if (status == LoadConfigFilesStatus.ERROR) {
-                            Toast.makeText(MainActivity.this, getString(status.message()), Toast.LENGTH_LONG).show();
+                            longToast(status.message());
                         }
                     } else {
                         message.setText(getString(status.message(), ConfigManager.getInstance().getConfigDir()));
@@ -214,12 +213,36 @@ public class MainActivity extends MercuryActivity implements MainView {
                         toast = !requestStoragePermission(STORAGE_PERMISSION_PUB_REQ);
                     }
                     if (toast) {
-                        Toast.makeText(MainActivity.this, getString(status.message(), SshManager.getInstance().getPublicKeyExportedFile()), Toast.LENGTH_LONG).show();
+                        longToast(getString(status.message(), SshManager.getInstance().getPublicKeyExportedFile()));
                     }
                 }
             }.execute();
         }
     }
+
+/*    private void doSomeWork() {
+        getExportPublicKeyTask()
+                .doOnSubscribe(new Consumer<Disposable>() {
+                    @Override
+                    public void accept(Disposable disposable) throws Exception {
+                        showProgressDialog(getString(R.string.exporting_public_key));
+                    }
+                })
+                // Run on a background thread
+                .subscribeOn(Schedulers.io())
+                // Be notified on the main thread
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ExportPublicKeyStatus>() {
+                    @Override
+                    public void accept(ExportPublicKeyStatus exportPublicKeyStatus) throws Exception {
+
+                    }
+                });
+    }
+
+    private Observable<ExportPublicKeyStatus> getExportPublicKeyTask() {
+        return Observable.just(SshManager.getInstance().exportPublicKey());
+    }*/
 
     private boolean requestStoragePermission(int req) {
         boolean requested = false;
@@ -362,7 +385,7 @@ public class MainActivity extends MercuryActivity implements MainView {
                 .input(R.string.connection_string_hint, 0, false, new MaterialDialog.InputCallback() {
                     @Override
                     public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
-                        if (isConnectionStringValid(input.toString())) {
+                        if (mainPresenter.isConnectionStringValid(input.toString())) {
                             dialog.getActionButton(DialogAction.POSITIVE).setEnabled(true);
                         } else {
                             dialog.getActionButton(DialogAction.POSITIVE).setEnabled(false);
@@ -387,10 +410,6 @@ public class MainActivity extends MercuryActivity implements MainView {
                 .show();
 
         EventBus.getDefault().removeStickyEvent(event);
-    }
-
-    private boolean isConnectionStringValid(String input) {
-        return input.matches("^.+@.+$");
     }
 
     @Override
